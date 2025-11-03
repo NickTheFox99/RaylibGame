@@ -1,0 +1,50 @@
+[
+{
+  "directory": "/home/maple/Documents/WebTest/build-web",
+  "command": "/usr/lib/emscripten/emcc -DGRAPHICS_API_OPENGL_ES2 -DPLATFORM_WEB @CMakeFiles/game.dir/includes_C.rsp -O3 -DNDEBUG -o CMakeFiles/game.dir/src/main.c.o -c /home/maple/Documents/WebTest/src/main.c",
+  "file": "/home/maple/Documents/WebTest/src/main.c",
+  "output": "CMakeFiles/game.dir/src/main.c.o"
+},
+{
+  "directory": "/home/maple/Documents/WebTest/build-web/_deps/raylib-build/raylib",
+  "command": "/usr/lib/emscripten/emcc -DGRAPHICS_API_OPENGL_ES2 -DPLATFORM_WEB @CMakeFiles/raylib.dir/includes_C.rsp -fno-strict-aliasing -Werror=implicit-function-declaration -Werror=pointer-arith  -O3 -DNDEBUG -std=gnu99 -o CMakeFiles/raylib.dir/raudio.c.o -c /home/maple/Documents/WebTest/build-web/_deps/raylib-src/src/raudio.c",
+  "file": "/home/maple/Documents/WebTest/build-web/_deps/raylib-src/src/raudio.c",
+  "output": "_deps/raylib-build/raylib/CMakeFiles/raylib.dir/raudio.c.o"
+},
+{
+  "directory": "/home/maple/Documents/WebTest/build-web/_deps/raylib-build/raylib",
+  "command": "/usr/lib/emscripten/emcc -DGRAPHICS_API_OPENGL_ES2 -DPLATFORM_WEB @CMakeFiles/raylib.dir/includes_C.rsp -fno-strict-aliasing -Werror=implicit-function-declaration -Werror=pointer-arith  -O3 -DNDEBUG -std=gnu99 -o CMakeFiles/raylib.dir/rcore.c.o -c /home/maple/Documents/WebTest/build-web/_deps/raylib-src/src/rcore.c",
+  "file": "/home/maple/Documents/WebTest/build-web/_deps/raylib-src/src/rcore.c",
+  "output": "_deps/raylib-build/raylib/CMakeFiles/raylib.dir/rcore.c.o"
+},
+{
+  "directory": "/home/maple/Documents/WebTest/build-web/_deps/raylib-build/raylib",
+  "command": "/usr/lib/emscripten/emcc -DGRAPHICS_API_OPENGL_ES2 -DPLATFORM_WEB @CMakeFiles/raylib.dir/includes_C.rsp -fno-strict-aliasing -Werror=implicit-function-declaration -Werror=pointer-arith  -O3 -DNDEBUG -std=gnu99 -o CMakeFiles/raylib.dir/rmodels.c.o -c /home/maple/Documents/WebTest/build-web/_deps/raylib-src/src/rmodels.c",
+  "file": "/home/maple/Documents/WebTest/build-web/_deps/raylib-src/src/rmodels.c",
+  "output": "_deps/raylib-build/raylib/CMakeFiles/raylib.dir/rmodels.c.o"
+},
+{
+  "directory": "/home/maple/Documents/WebTest/build-web/_deps/raylib-build/raylib",
+  "command": "/usr/lib/emscripten/emcc -DGRAPHICS_API_OPENGL_ES2 -DPLATFORM_WEB @CMakeFiles/raylib.dir/includes_C.rsp -fno-strict-aliasing -Werror=implicit-function-declaration -Werror=pointer-arith  -O3 -DNDEBUG -std=gnu99 -o CMakeFiles/raylib.dir/rshapes.c.o -c /home/maple/Documents/WebTest/build-web/_deps/raylib-src/src/rshapes.c",
+  "file": "/home/maple/Documents/WebTest/build-web/_deps/raylib-src/src/rshapes.c",
+  "output": "_deps/raylib-build/raylib/CMakeFiles/raylib.dir/rshapes.c.o"
+},
+{
+  "directory": "/home/maple/Documents/WebTest/build-web/_deps/raylib-build/raylib",
+  "command": "/usr/lib/emscripten/emcc -DGRAPHICS_API_OPENGL_ES2 -DPLATFORM_WEB @CMakeFiles/raylib.dir/includes_C.rsp -fno-strict-aliasing -Werror=implicit-function-declaration -Werror=pointer-arith  -O3 -DNDEBUG -std=gnu99 -o CMakeFiles/raylib.dir/rtext.c.o -c /home/maple/Documents/WebTest/build-web/_deps/raylib-src/src/rtext.c",
+  "file": "/home/maple/Documents/WebTest/build-web/_deps/raylib-src/src/rtext.c",
+  "output": "_deps/raylib-build/raylib/CMakeFiles/raylib.dir/rtext.c.o"
+},
+{
+  "directory": "/home/maple/Documents/WebTest/build-web/_deps/raylib-build/raylib",
+  "command": "/usr/lib/emscripten/emcc -DGRAPHICS_API_OPENGL_ES2 -DPLATFORM_WEB @CMakeFiles/raylib.dir/includes_C.rsp -fno-strict-aliasing -Werror=implicit-function-declaration -Werror=pointer-arith  -O3 -DNDEBUG -std=gnu99 -o CMakeFiles/raylib.dir/rtextures.c.o -c /home/maple/Documents/WebTest/build-web/_deps/raylib-src/src/rtextures.c",
+  "file": "/home/maple/Documents/WebTest/build-web/_deps/raylib-src/src/rtextures.c",
+  "output": "_deps/raylib-build/raylib/CMakeFiles/raylib.dir/rtextures.c.o"
+},
+{
+  "directory": "/home/maple/Documents/WebTest/build-web/_deps/raylib-build/raylib",
+  "command": "/usr/lib/emscripten/emcc -DGRAPHICS_API_OPENGL_ES2 -DPLATFORM_WEB @CMakeFiles/raylib.dir/includes_C.rsp -fno-strict-aliasing -Werror=implicit-function-declaration -Werror=pointer-arith  -O3 -DNDEBUG -std=gnu99 -o CMakeFiles/raylib.dir/utils.c.o -c /home/maple/Documents/WebTest/build-web/_deps/raylib-src/src/utils.c",
+  "file": "/home/maple/Documents/WebTest/build-web/_deps/raylib-src/src/utils.c",
+  "output": "_deps/raylib-build/raylib/CMakeFiles/raylib.dir/utils.c.o"
+}
+]

@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/maple/Documents/WebTest/build",
+  "command": "/usr/bin/cc   -I/usr/include -o CMakeFiles/game.dir/src/main.c.o -c /home/maple/Documents/WebTest/src/main.c",
+  "file": "/home/maple/Documents/WebTest/src/main.c",
+  "output": "CMakeFiles/game.dir/src/main.c.o"
+}
+]
