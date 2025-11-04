@@ -1,1 +1,0 @@
-/usr/lib/emscripten/emcc -O3 -DNDEBUG  -s USE_GLFW=3 -s ASSERTIONS=1 -s WASM=1 -s ASYNCIFY -s GL_ENABLE_GET_PROC_ADDRESS=1 -s SINGLE_FILE=1 --shell-file /home/maple/Documents/WebTest/src/minshell.html -sUSE_GLFW=3 @CMakeFiles/game.dir/objects1.rsp -o game.html @CMakeFiles/game.dir/linkLibs.rsp

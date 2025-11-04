@@ -1,1 +1,0 @@
-/usr/bin/cc -Wl,--dependency-file=CMakeFiles/example.dir/link.d CMakeFiles/example.dir/src/main.c.o -o example  /usr/lib/libraylib.so -L/usr/lib -lraylib
