@@ -39,15 +39,16 @@ int main(void) {
     float scale = MIN((float)GetScreenWidth() / SCREEN_WIDTH,
                       (float)GetScreenHeight() / SCREEN_HEIGHT);
 
+    cube.transform =
+        MatrixMultiply(MatrixRotateXYZ(Vector3Scale((Vector3){1.0f, 1.5f, 2.5f},
+                                                    GetFrameTime())),
+                       cube.transform);
+
     BeginTextureMode(target);
     {
       ClearBackground(BLACK);
       BeginMode3D(camera);
       {
-        cube.transform =
-            MatrixMultiply(MatrixRotateXYZ(Vector3Scale(
-                               (Vector3){1.0f, 1.5f, 2.5f}, GetFrameTime())),
-                           cube.transform);
         DrawModel(cube, Vector3Zero(), 1.0f, WHITE);
       }
       EndMode3D();

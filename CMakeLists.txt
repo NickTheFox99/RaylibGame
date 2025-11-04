@@ -19,9 +19,6 @@ if(NOT raylib_FOUND) # If there's none, fetch and build raylib
     FetchContent_MakeAvailable(raylib)
   endif()
 endif()
-if(TARGET raylib)
-  message(STATUS "Found target: raylib")
-endif()
 
 # Our Project
 add_executable(${PROJECT_NAME})
