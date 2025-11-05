@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.11) # FetchContent is available in 3.11+
-project(game)
+project(game C CXX)
 # Generate compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -19,19 +19,34 @@ if(NOT raylib_FOUND) # If there's none, fetch and build raylib
     FetchContent_MakeAvailable(raylib)
   endif()
 endif()
+set(RAYLIB_CPP_VERSION "v5.5.0")
+find_package(raylib_cpp QUIET) # QUIET or REQUIRED
+if(NOT raylib_cpp_FOUND) # If there's none, fetch and build raylib
+  include(FetchContent)
+  FetchContent_Declare(
+    raylib_cpp
+    DOWNLOAD_EXTRACT_TIMESTAMP OFF
+    URL https://github.com/RobLoach/raylib-cpp/archive/refs/tags/${RAYLIB_CPP_VERSION}.tar.gz
+  )
+  FetchContent_GetProperties(raylib_cpp)
+  if(NOT raylib_cpp_POPULATED) # Have we downloaded raylib yet?
+    set(FETCHCONTENT_QUIET NO)
+    FetchContent_MakeAvailable(raylib_cpp)
+  endif()
+endif()
 
 # Our Project
 add_executable(${PROJECT_NAME})
 
-file(GLOB_RECURSE PROJECTSOURCES src/*.c)
+file(GLOB_RECURSE PROJECTSOURCES "src/*.c" "src/*.cpp")
 target_sources(${PROJECT_NAME} PRIVATE ${PROJECTSOURCES})
 
 file(GLOB_RECURSE PROJECTDATA data/*.h)
 target_sources(${PROJECT_NAME} PRIVATE ${PROJECTDATA})
 
 #set(raylib_VERBOSE 1)
-target_link_libraries(${PROJECT_NAME} raylib)
-target_include_directories(${PROJECT_NAME} PRIVATE ${raylib_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} raylib raylib_cpp)
+target_include_directories(${PROJECT_NAME} PRIVATE ${raylib_INCLUDE_DIRS} ${raylib_cpp_INCLUDE_DIRS})
 
 # Web Configurations
 if(${PLATFORM} STREQUAL "Web")

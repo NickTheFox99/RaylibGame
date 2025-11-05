@@ -1,7 +1,5 @@
-#include "raylib.h"
-#include "raymath.h"
-
 #include "../data/cube.png.h"
+#include <raylib-cpp.hpp>
 
 #define SCREEN_WIDTH (320)
 #define SCREEN_HEIGHT (240)
@@ -10,26 +8,21 @@
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 int main(void) {
-  SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_WINDOW_RESIZABLE |
-                 FLAG_WINDOW_MAXIMIZED | FLAG_VSYNC_HINT);
-  InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "game");
-  SetWindowMinSize(320, 240);
-  SetTargetFPS(60);
+  raylib::Window window(SCREEN_WIDTH, SCREEN_HEIGHT, "game",
+                        FLAG_MSAA_4X_HINT | FLAG_WINDOW_RESIZABLE |
+                            FLAG_WINDOW_MAXIMIZED | FLAG_VSYNC_HINT);
+  window.SetMinSize({320, 240});
+  window.SetTargetFPS(60);
 
-  RenderTexture2D target = LoadRenderTexture(SCREEN_WIDTH, SCREEN_HEIGHT);
-  SetTextureFilter(target.texture, TEXTURE_FILTER_POINT);
+  raylib::RenderTexture2D target(320, 240);
 
-  Image image =
-      LoadImageFromMemory(".png", assets_cube_png, assets_cube_png_len);
+  target.GetTexture().SetFilter(TEXTURE_FILTER_POINT);
 
-  Texture2D texture = LoadTextureFromImage(image);
+  raylib::Image texImg(".png", assets_cube_png, assets_cube_png_len);
+  raylib::Texture2D texture(texImg);
 
-  Camera camera = {0};
-  camera.position = (Vector3){0.0f, 0.0f, 5.0f};
-  camera.target = (Vector3){0.0f, 0.0f, 0.0f};
-  camera.up = (Vector3){0.0f, 1.0f, 0.0f};
-  camera.fovy = 60.0f;
-  camera.projection = CAMERA_PERSPECTIVE;
+  raylib::Camera3D cam(raylib::Vector3::Zero(), raylib::Vector3::Zero(),
+                       {0.0f, 1.0f, 0.0f}, 60.0f, CAMERA_PERSPECTIVE);
 
   Model cube = LoadModelFromMesh(GenMeshCube(1.0f, 1.0f, 1.0f));
   cube.materials[0].maps[MATERIAL_MAP_ALBEDO].texture = texture;
