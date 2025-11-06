@@ -38,11 +38,57 @@ endif()
 # Our Project
 add_executable(${PROJECT_NAME})
 
+file(GLOB_RECURSE ASSET_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/assets/*
+)
+
+set(DATA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/data)
+set(GENERATED_HEADERS "")
+
+foreach(ASSET_FILE ${ASSET_FILES})
+  # Get relative path from assets/
+  file(RELATIVE_PATH REL_PATH
+        ${CMAKE_CURRENT_SOURCE_DIR}/assets
+        ${ASSET_FILE}
+    )
+
+  # Get just the filename
+  get_filename_component(FILE_NAME ${ASSET_FILE} NAME)
+
+  # Get the subdirectory path
+  get_filename_component(SUB_DIR ${REL_PATH} DIRECTORY)
+
+  # Create output directory structure
+  set(OUTPUT_DIR ${DATA_DIR}/${SUB_DIR})
+  file(MAKE_DIRECTORY ${OUTPUT_DIR})
+
+  # Output file with full extension + .h
+  set(OUTPUT_FILE ${OUTPUT_DIR}/${FILE_NAME}.h)
+
+  # Get the directory of the asset file for WORKING_DIRECTORY
+  get_filename_component(ASSET_DIR ${ASSET_FILE} DIRECTORY)
+
+  add_custom_command(
+        OUTPUT ${OUTPUT_FILE}
+        COMMAND xxd -i ${FILE_NAME} ${OUTPUT_FILE}
+        DEPENDS ${ASSET_FILE}
+        WORKING_DIRECTORY ${ASSET_DIR}
+        COMMENT "Embedding ${REL_PATH}"
+        VERBATIM
+    )
+
+  list(APPEND GENERATED_HEADERS ${OUTPUT_FILE})
+endforeach()
+
 file(GLOB_RECURSE PROJECTSOURCES "src/*.c" "src/*.cpp")
 target_sources(${PROJECT_NAME} PRIVATE ${PROJECTSOURCES})
 
-file(GLOB_RECURSE PROJECTDATA data/*.h)
-target_sources(${PROJECT_NAME} PRIVATE ${PROJECTDATA})
+# CHANGED: Use ${GENERATED_HEADERS} instead of GLOB
+# The files don't exist at configure time, so GLOB won't find them!
+target_sources(${PROJECT_NAME} PRIVATE ${GENERATED_HEADERS})
+
+# Add data directory to include path
+target_include_directories(${PROJECT_NAME} PRIVATE ${DATA_DIR})
 
 #set(raylib_VERBOSE 1)
 target_link_libraries(${PROJECT_NAME} raylib raylib_cpp)
