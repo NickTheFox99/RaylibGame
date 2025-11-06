@@ -55,12 +55,22 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install -y libasound2-dev mesa-common-dev libx11-dev libxrandr-dev libxi-dev xorg-dev libgl1-mesa-dev libglu1-mesa-dev
+        sudo apt-get install -y libasound2-dev mesa-common-dev libx11-dev libxrandr-dev libxi-dev xorg-dev libgl1-mesa-dev libglu1-mesa-dev vim-common
 
     - name: Install MacOS Dependencies
       if: runner.os == 'macOS'
       run: |
         brew install cmake
+        xcode-select --install || true  # Install Command Line Tools (includes xxd)
+
+    - name: Install Windows Dependencies
+      if: runner.os == 'Windows'
+      run: |
+        # Download xxd for Windows
+        curl -L -o xxd.exe https://github.com/easyaspi314/xxd-standalone/releases/download/v1.0.0/xxd.exe
+        # Add the current directory to PATH so xxd can be found
+        echo "${{ github.workspace }}" >> $GITHUB_PATH
+      shell: bash
 
     - name: Cache CMake files
       uses: actions/cache@v3
