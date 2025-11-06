@@ -61,11 +61,12 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         brew install cmake
-        xcode-select --install || true  # Install Command Line Tools (includes xxd)
+        xcode-select --install || true
 
     - name: Install Windows Dependencies
       if: runner.os == 'Windows'
-      uses: git-for-windows/setup-git-for-windows@v1
+      run: choco install vim -y
+      shell: pwsh
 
     - name: Cache CMake files
       uses: actions/cache@v3
