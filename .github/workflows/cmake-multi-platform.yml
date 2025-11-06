@@ -6,6 +6,9 @@ on:
       - "v*"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -118,25 +121,29 @@ jobs:
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: ctest --build-config ${{ matrix.build_type }}
 
-    - name: Create Release ZIP
+    - name: Create Release ZIP (Windows)
+      if: matrix.platform == 'Windows'
       run: |
-        cd ${{ steps.strings.outputs.build-output-dir }}
-        if [ "${{ matrix.platform }}" = "Web" ]; then
-          zip -r ../${{ matrix.artifact_name }}.zip *.html *.js *.data
-        elif [ "${{ matrix.platform }}" = "Windows" ]; then
-          cd ${{ matrix.build_type }}
-          zip -r ../../${{ matrix.artifact_name }}.zip *.exe
-        else
-          zip -r ../${{ matrix.artifact_name }}.zip * -x "*.cmake" "*.txt" "*.json" "*.a" "*.o" "*.d" "*.make" "*.internal" "*.marks" "Makefile" ".ninja*" "*.ninja" "CMakeFiles/*"
-        fi
+        cd build/${{ matrix.build_type }}
+        Compress-Archive -Path *.exe -DestinationPath ../../${{ matrix.artifact_name }}.zip
+      shell: pwsh
+
+    - name: Create Release ZIP (Web)
+      if: matrix.platform == 'Web'
+      run: |
+        cd build
+        zip -r ../${{ matrix.artifact_name }}.zip *.html *.js *.data
       shell: bash
 
-    - name: Create Release
-      uses: softprops/action-gh-release@v1
+    - name: Create Release ZIP (Linux/macOS)
+      if: matrix.platform == 'Linux' || matrix.platform == 'MacOS'
+      run: |
+        cd build
+        zip -r ../${{ matrix.artifact_name }}.zip * -x "*.cmake" "*.txt" "*.json" "*.a" "*.o" "*.d" "*.make" "*.internal" "*.marks" "Makefile" ".ninja*" "*.ninja" "CMakeFiles/*"
+      shell: bash
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v3
       with:
-        files: ${{ matrix.artifact_name }}.zip
-        draft: false
-        prerelease: false
-        generate_release_notes: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: ${{ matrix.artifact_name }}
+        path: ${{ matrix.artifact_name }}.zip
