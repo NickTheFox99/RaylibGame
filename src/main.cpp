@@ -22,7 +22,7 @@ int main(void) {
   target.GetTexture().SetFilter(TEXTURE_FILTER_POINT);
 
   raylib::Image texImg =
-      raylib::LoadImageFromMemory(".png", assets_cube_png, assets_cube_png_len);
+      raylib::LoadImageFromMemory(".png", cube_png, cube_png_len);
   raylib::Texture2D texture = texImg.LoadTexture();
 
   raylib::Camera3D cam(raylib::Vector3(0.0, 0.0, std::sqrt(3.0)),
