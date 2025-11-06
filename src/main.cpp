@@ -18,53 +18,53 @@ int main(void) {
 
   target.GetTexture().SetFilter(TEXTURE_FILTER_POINT);
 
-  raylib::Image texImg(".png", assets_cube_png, assets_cube_png_len);
-  raylib::Texture2D texture(texImg);
+  raylib::Image texImg =
+      raylib::LoadImageFromMemory(".png", assets_cube_png, assets_cube_png_len);
+  raylib::Texture2D texture = texImg.LoadTexture();
 
-  raylib::Camera3D cam(raylib::Vector3::Zero(), raylib::Vector3::Zero(),
+  raylib::Camera3D cam(raylib::Vector3::One(), raylib::Vector3::Zero(),
                        {0.0f, 1.0f, 0.0f}, 60.0f, CAMERA_PERSPECTIVE);
 
-  Model cube = LoadModelFromMesh(GenMeshCube(1.0f, 1.0f, 1.0f));
+  raylib::Model cube(GenMeshCube(1.0f, 1.0f, 1.0f));
   cube.materials[0].maps[MATERIAL_MAP_ALBEDO].texture = texture;
 
-  while (!WindowShouldClose()) {
+  while (!window.ShouldClose()) {
 
-    float scale = MIN((float)GetScreenWidth() / SCREEN_WIDTH,
-                      (float)GetScreenHeight() / SCREEN_HEIGHT);
+    float scale = MIN((float)window.GetWidth() / SCREEN_WIDTH,
+                      (float)window.GetHeight() / SCREEN_HEIGHT);
 
-    cube.transform =
-        MatrixMultiply(MatrixRotateXYZ(Vector3Scale((Vector3){1.0f, 1.5f, 2.5f},
-                                                    GetFrameTime())),
-                       cube.transform);
+    cube.SetTransform(
+        raylib::Matrix::RotateXYZ(
+            raylib::Vector3(1.0f, 1.5f, 2.5f).Scale(window.GetFrameTime()))
+            .Multiply(cube.GetTransform()));
 
-    BeginTextureMode(target);
+    target.BeginMode();
     {
       ClearBackground(BLACK);
-      BeginMode3D(camera);
+      cam.BeginMode();
       {
-        DrawModel(cube, Vector3Zero(), 1.0f, WHITE);
+        cube.Draw(raylib::Vector3::Zero());
       }
-      EndMode3D();
+      cam.EndMode();
     }
-    EndTextureMode();
+    target.EndMode();
 
-    BeginDrawing();
+    window.BeginDrawing();
     {
       ClearBackground(BLACK);
-      DrawTexturePro(
-          target.texture,
-          (Rectangle){0.0f, 0.0f, (float)target.texture.width,
-                      (float)-target.texture.height},
-          (Rectangle){
-              (GetScreenWidth() - ((float)SCREEN_WIDTH * scale)) * 0.5f,
-              (GetScreenHeight() - ((float)SCREEN_HEIGHT * scale)) * 0.5f,
-              (float)SCREEN_WIDTH * scale, (float)SCREEN_HEIGHT * scale},
-          (Vector2){0, 0}, 0.0f, WHITE);
+      target.GetTexture().Draw(
+          raylib::Rectangle(0.0f, 0.0f, (float)target.GetTexture().width,
+                            (float)-target.GetTexture().height),
+          raylib::Rectangle(
+              (window.GetWidth() - ((float)SCREEN_WIDTH * scale)) * 0.5f,
+              (window.GetHeight() - ((float)SCREEN_HEIGHT * scale)) * 0.5f,
+              (float)SCREEN_WIDTH * scale, (float)SCREEN_HEIGHT * scale),
+          raylib::Vector2(0, 0), 0.0f, WHITE);
     }
-    EndDrawing();
+    window.EndDrawing();
   }
 
-  CloseWindow();
+  window.Close();
 
   return 0;
 }
