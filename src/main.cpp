@@ -1,4 +1,6 @@
 #include "../data/cube.png.h"
+#include "raylib.h"
+#include <cmath>
 #include <raylib-cpp.hpp>
 
 #define SCREEN_WIDTH (320)
@@ -13,6 +15,7 @@ int main(void) {
                             FLAG_WINDOW_MAXIMIZED | FLAG_VSYNC_HINT);
   window.SetMinSize({320, 240});
   window.SetTargetFPS(60);
+  window.SetExitKey(KEY_BACKSPACE);
 
   raylib::RenderTexture2D target(320, 240);
 
@@ -22,8 +25,9 @@ int main(void) {
       raylib::LoadImageFromMemory(".png", assets_cube_png, assets_cube_png_len);
   raylib::Texture2D texture = texImg.LoadTexture();
 
-  raylib::Camera3D cam(raylib::Vector3::One(), raylib::Vector3::Zero(),
-                       {0.0f, 1.0f, 0.0f}, 60.0f, CAMERA_PERSPECTIVE);
+  raylib::Camera3D cam(raylib::Vector3(0.0, 0.0, std::sqrt(3.0)),
+                       raylib::Vector3::Zero(), {0.0f, 1.0f, 0.0f}, 60.0f,
+                       CAMERA_PERSPECTIVE);
 
   raylib::Model cube(GenMeshCube(1.0f, 1.0f, 1.0f));
   cube.materials[0].maps[MATERIAL_MAP_ALBEDO].texture = texture;
@@ -41,6 +45,8 @@ int main(void) {
     target.BeginMode();
     {
       ClearBackground(BLACK);
+      raylib::Vector2(160.0f, 120.0f)
+          .DrawCircle(120.0f, raylib::Color::White());
       cam.BeginMode();
       {
         cube.Draw(raylib::Vector3::Zero());
