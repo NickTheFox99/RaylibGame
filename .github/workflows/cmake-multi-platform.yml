@@ -72,7 +72,7 @@ jobs:
       shell: pwsh
 
     - name: Cache CMake files
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.cmake
@@ -84,7 +84,7 @@ jobs:
 
     - name: Cache emsdk
       if: matrix.c_compiler == 'emcc'
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           emsdk-cache
@@ -143,7 +143,7 @@ jobs:
       shell: bash
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.artifact_name }}
         path: ${{ matrix.artifact_name }}.zip
