@@ -24,15 +24,8 @@ jobs:
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
-            platform: Linux-gcc
-            artifact_name: linux-gcc
-            build_type: Release
-
-          - os: ubuntu-latest
-            c_compiler: clang
-            cpp_compiler: clang++
-            platform: Linux-clang
-            artifact_name: linux-clang
+            platform: Linux
+            artifact_name: linux
             build_type: Release
 
           - os: macos-latest
@@ -119,36 +112,7 @@ jobs:
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: ctest --build-config ${{ matrix.build_type }}
 
-    # For regular pushes, upload as artifacts
-    - name: Upload Build Artifacts
-      if: github.event_name != 'release'
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ matrix.platform }}-build
-        path: |
-          ${{ matrix.platform == 'Web' && format('{0}/*.{html,js,data}', steps.strings.outputs.build-output-dir) }}
-          ${{ matrix.platform == 'Windows' && format('{0}/{1}/*.exe', steps.strings.outputs.build-output-dir, matrix.build_type) }}
-          ${{ contains(matrix.platform, 'Linux') && format('{0}/*', steps.strings.outputs.build-output-dir) }}
-          ${{ matrix.platform == 'MacOS' && format('{0}/*', steps.strings.outputs.build-output-dir) }}
-          assets/**
-        exclude: |
-          ${{ contains(matrix.platform, 'Linux') || matrix.platform == 'MacOS' ? '**/*.cmake
-          **/*.txt
-          **/*.json
-          **/*.a
-          **/*.o
-          **/*.d
-          **/*.make
-          **/*.internal
-          **/*.marks
-          **/Makefile
-          **/.ninja*
-          **/*.ninja
-          **/CMakeFiles/**' : '' }}
-
-    # For releases, create ZIP files and upload to the release
     - name: Create Release ZIP
-      if: github.event_name == 'release'
       run: |
         cd ${{ steps.strings.outputs.build-output-dir }}
         if [ "${{ matrix.platform }}" = "Web" ]; then
@@ -162,7 +126,6 @@ jobs:
       shell: bash
 
     - name: Upload Release Asset
-      if: github.event_name == 'release'
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
