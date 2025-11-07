@@ -1,4 +1,5 @@
 #include "../data/cube.png.h"
+#include "Functions.hpp"
 #include "raylib.h"
 #include <cmath>
 #include <raylib-cpp.hpp>
@@ -9,10 +10,11 @@
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
+raylib::Window window(SCREEN_WIDTH, SCREEN_HEIGHT, "game",
+                      FLAG_MSAA_4X_HINT | FLAG_WINDOW_RESIZABLE |
+                          FLAG_WINDOW_MAXIMIZED | FLAG_VSYNC_HINT);
+
 int main(void) {
-  raylib::Window window(SCREEN_WIDTH, SCREEN_HEIGHT, "game",
-                        FLAG_MSAA_4X_HINT | FLAG_WINDOW_RESIZABLE |
-                            FLAG_WINDOW_MAXIMIZED | FLAG_VSYNC_HINT);
   window.SetMinSize({320, 240});
   window.SetTargetFPS(60);
   window.SetExitKey(KEY_BACKSPACE);
@@ -74,3 +76,5 @@ int main(void) {
 
   return 0;
 }
+
+void ScreenDraw() {}
