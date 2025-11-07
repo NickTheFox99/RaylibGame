@@ -1,8 +1,15 @@
 #include "../data/cube.png.h"
 #include "Functions.hpp"
+#include "RenderTexture.hpp"
+#include "Texture.hpp"
+#include "Vector3.hpp"
 #include "raylib.h"
 #include <cmath>
 #include <raylib-cpp.hpp>
+
+#if defined(PLATFORM_WEB)
+#include <emscripten/emscripten.h>
+#endif
 
 #define SCREEN_WIDTH (320)
 #define SCREEN_HEIGHT (240)
@@ -10,32 +17,48 @@
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
+void MainLoop();
+
 raylib::Window window(SCREEN_WIDTH, SCREEN_HEIGHT, "game",
                       FLAG_MSAA_4X_HINT | FLAG_WINDOW_RESIZABLE |
                           FLAG_WINDOW_MAXIMIZED | FLAG_VSYNC_HINT);
+
+raylib::RenderTexture2D target(320, 240);
+
+raylib::Image texImg =
+    raylib::LoadImageFromMemory(".png", cube_png, cube_png_len);
+
+raylib::Texture2D texture = texImg.LoadTexture();
+
+raylib::Camera3D cam(raylib::Vector3(0.0f, 0.0f, std::sqrt(3.0f)),
+                     raylib::Vector3::Zero(), raylib::Vector3(0.0f, 1.0f, 0.0f),
+                     60.0f, CAMERA_PERSPECTIVE);
+
+raylib::Model cube(GenMeshCube(1.0f, 1.0f, 1.0f));
 
 int main(void) {
   window.SetMinSize({320, 240});
   window.SetTargetFPS(60);
   window.SetExitKey(KEY_BACKSPACE);
 
-  raylib::RenderTexture2D target(320, 240);
-
   target.GetTexture().SetFilter(TEXTURE_FILTER_POINT);
 
-  raylib::Image texImg =
-      raylib::LoadImageFromMemory(".png", cube_png, cube_png_len);
-  raylib::Texture2D texture = texImg.LoadTexture();
-
-  raylib::Camera3D cam(raylib::Vector3(0.0, 0.0, std::sqrt(3.0)),
-                       raylib::Vector3::Zero(), {0.0f, 1.0f, 0.0f}, 60.0f,
-                       CAMERA_PERSPECTIVE);
-
-  raylib::Model cube(GenMeshCube(1.0f, 1.0f, 1.0f));
   cube.materials[0].maps[MATERIAL_MAP_ALBEDO].texture = texture;
 
-  while (!window.ShouldClose()) {
+#if defined(PLATFORM_WEB)
+  emscripten_set_main_loop(MainLoop, 0, 1);
+#else
+  while (!window.ShouldClose())
+    MainLoop();
+#endif
 
+  window.Close();
+
+  return 0;
+}
+
+void MainLoop() {
+  {
     float scale = MIN((float)window.GetWidth() / SCREEN_WIDTH,
                       (float)window.GetHeight() / SCREEN_HEIGHT);
 
@@ -71,10 +94,4 @@ int main(void) {
     }
     window.EndDrawing();
   }
-
-  window.Close();
-
-  return 0;
 }
-
-void ScreenDraw() {}
