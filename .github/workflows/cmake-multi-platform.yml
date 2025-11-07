@@ -82,21 +82,10 @@ jobs:
           ${{ runner.os }}-cmake-${{ matrix.c_compiler }}-
           ${{ runner.os }}-cmake-
 
-    - name: Cache emsdk
-      if: matrix.c_compiler == 'emcc'
-      uses: actions/cache@v4
-      with:
-        path: |
-          emsdk-cache
-        key: ${{ runner.os }}-emsdk-${{ hashFiles('.github/workflows/**') }}
-        restore-keys: |
-          ${{ runner.os }}-emsdk-
-
     - name: Setup Emscripten
       if: matrix.c_compiler == 'emcc'
-      uses: mymindstorm/setup-emsdk@v12
+      uses: mymindstorm/setup-emsdk@v14
       with:
-        actions-cache-folder: emsdk-cache
         version: 3.1.45
 
     - name: Setup Web Build Environment
@@ -132,14 +121,15 @@ jobs:
       if: matrix.platform == 'Web'
       run: |
         cd build
-        zip -r ../${{ matrix.artifact_name }}.zip *.html *.js *.data
+        zip -r ../${{ matrix.artifact_name }}.zip *.html *.js *.data *.wasm
       shell: bash
 
     - name: Create Release ZIP (Linux/macOS)
       if: matrix.platform == 'Linux' || matrix.platform == 'MacOS'
       run: |
         cd build
-        zip -r ../${{ matrix.artifact_name }}.zip * -x "*.cmake" "*.txt" "*.json" "*.a" "*.o" "*.d" "*.make" "*.internal" "*.marks" "Makefile" ".ninja*" "*.ninja" "CMakeFiles/*"
+        # Find executable files (not libraries or scripts) and zip them
+        find . -maxdepth 1 -type f -executable ! -name "*.so" ! -name "*.a" ! -name "*.sh" -exec zip ../${{ matrix.artifact_name }}.zip {} +
       shell: bash
 
     - name: Upload Build Artifacts
