@@ -100,7 +100,7 @@ jobs:
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        ${{ matrix.c_compiler == 'emcc' && '-DPLATFORM=Web -DCMAKE_EXE_LINKER_FLAGS="-s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 -s FORCE_FILESYSTEM=1 --preload-file assets --shell-file ../src/shell.html"' || '' }}
+        ${{ matrix.c_compiler == 'emcc' && '-DPLATFORM=Web' || '' }}
         -S ${{ github.workspace }}
 
     - name: Build
@@ -121,15 +121,27 @@ jobs:
       if: matrix.platform == 'Web'
       run: |
         cd build
-        zip -r ../${{ matrix.artifact_name }}.zip *.html *.js *.data *.wasm
+        zip -r ../${{ matrix.artifact_name }}.zip *.html *.js *.data *.wasm 2>/dev/null || true
       shell: bash
 
     - name: Create Release ZIP (Linux/macOS)
       if: matrix.platform == 'Linux' || matrix.platform == 'MacOS'
       run: |
+        mkdir -p release_files
         cd build
-        # Find executable files (not libraries or scripts) and zip them
-        find . -maxdepth 1 -type f -executable ! -name "*.so" ! -name "*.a" ! -name "*.sh" -exec zip ../${{ matrix.artifact_name }}.zip {} +
+        # Copy executable files (excluding libraries and build artifacts)
+        for file in *; do
+          if [ -f "$file" ] && [ -x "$file" ]; then
+            case "$file" in
+              *.so|*.a|*.dylib|*.sh) ;;
+              *) cp "$file" ../release_files/ ;;
+            esac
+          fi
+        done
+        cd ../release_files
+        if [ -n "$(ls -A 2>/dev/null)" ]; then
+          zip ../${{ matrix.artifact_name }}.zip *
+        fi
       shell: bash
 
     - name: Upload Build Artifacts
