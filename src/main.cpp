@@ -1,9 +1,4 @@
 #include "../data/cube.png.h"
-#include "Functions.hpp"
-#include "RenderTexture.hpp"
-#include "Texture.hpp"
-#include "Vector3.hpp"
-#include "raylib.h"
 #include <cmath>
 #include <raylib-cpp.hpp>
 
