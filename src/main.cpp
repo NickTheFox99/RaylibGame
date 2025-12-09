@@ -80,7 +80,7 @@ void MainLoop() {
 
     window.BeginDrawing();
     {
-      ClearBackground(GREEN);
+      ClearBackground(BLACK);
       target.GetTexture().Draw(
           raylib::Rectangle(0.0f, 0.0f, (float)SCREEN_WIDTH,
                             (float)-SCREEN_HEIGHT),
