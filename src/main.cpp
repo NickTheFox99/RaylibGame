@@ -1,4 +1,5 @@
 #include "../data/cube.png.h"
+#include "raylib.h"
 #include <cmath>
 #include <raylib-cpp.hpp>
 
@@ -8,17 +9,18 @@
 
 #define SCREEN_WIDTH (320)
 #define SCREEN_HEIGHT (240)
+#define WIN_WIDTH (1280)
+#define WIN_HEIGHT (720)
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 void MainLoop();
 
-raylib::Window window(SCREEN_WIDTH, SCREEN_HEIGHT, "game",
-                      FLAG_MSAA_4X_HINT | FLAG_WINDOW_RESIZABLE |
-                          FLAG_WINDOW_MAXIMIZED | FLAG_VSYNC_HINT);
+raylib::Window window(WIN_WIDTH, WIN_HEIGHT, "game",
+                      FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
 
-raylib::RenderTexture2D target(320, 240);
+raylib::RenderTexture2D target(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 raylib::Image texImg =
     raylib::LoadImageFromMemory(".png", cube_png, cube_png_len);
@@ -43,7 +45,7 @@ int main(void) {
 #if defined(PLATFORM_WEB)
   emscripten_set_main_loop(MainLoop, 0, 1);
 #else
-  while (!window.ShouldClose())
+  while (!window.ShouldClose() && !raylib::Keyboard::IsKeyDown(KEY_ESCAPE))
     MainLoop();
 #endif
 
@@ -54,8 +56,9 @@ int main(void) {
 
 void MainLoop() {
   {
-    float scale = MIN((float)window.GetWidth() / SCREEN_WIDTH,
-                      (float)window.GetHeight() / SCREEN_HEIGHT);
+    int winWidth = GetScreenWidth(), winHeight = GetScreenHeight();
+    float scale =
+        MIN((float)winWidth / SCREEN_WIDTH, (float)winHeight / SCREEN_HEIGHT);
 
     cube.SetTransform(
         raylib::Matrix::RotateXYZ(
@@ -77,14 +80,14 @@ void MainLoop() {
 
     window.BeginDrawing();
     {
-      ClearBackground(BLACK);
+      ClearBackground(GREEN);
       target.GetTexture().Draw(
-          raylib::Rectangle(0.0f, 0.0f, (float)target.GetTexture().width,
-                            (float)-target.GetTexture().height),
-          raylib::Rectangle(
-              (window.GetWidth() - ((float)SCREEN_WIDTH * scale)) * 0.5f,
-              (window.GetHeight() - ((float)SCREEN_HEIGHT * scale)) * 0.5f,
-              (float)SCREEN_WIDTH * scale, (float)SCREEN_HEIGHT * scale),
+          raylib::Rectangle(0.0f, 0.0f, (float)SCREEN_WIDTH,
+                            (float)-SCREEN_HEIGHT),
+          raylib::Rectangle((winWidth - ((float)SCREEN_WIDTH * scale)) * 0.5f,
+                            (winHeight - ((float)SCREEN_HEIGHT * scale)) * 0.5f,
+                            (float)SCREEN_WIDTH * scale,
+                            (float)SCREEN_HEIGHT * scale),
           raylib::Vector2(0, 0), 0.0f, WHITE);
     }
     window.EndDrawing();
